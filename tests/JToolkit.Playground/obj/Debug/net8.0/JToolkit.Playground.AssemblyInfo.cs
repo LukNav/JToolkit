@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JToolkit.Playground")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e4abf73dc608c43e797f73122a28f9c117e508db")]
 [assembly: System.Reflection.AssemblyProductAttribute("JToolkit.Playground")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JToolkit.Playground")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
