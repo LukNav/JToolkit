@@ -7,4 +7,8 @@
         <IsPublishable>false</IsPublishable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\JToolkit.Comparer\JToolkit.Comparer.csproj" />
+    </ItemGroup>
+
 </Project>
