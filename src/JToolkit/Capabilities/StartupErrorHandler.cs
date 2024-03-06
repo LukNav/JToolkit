@@ -1,4 +1,4 @@
-﻿using JToolkit.Middleware.Handlers.Middleware;
+﻿using JToolkit.Middleware;
 
 namespace JToolkit.Capabilities;
 

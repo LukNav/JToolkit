@@ -8,7 +8,7 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "development",
-        "ASPNETCORE_URLS": "http://+:22226"
+        "ASPNETCORE_URLS": "http://+:22220"
       }
     }
   }

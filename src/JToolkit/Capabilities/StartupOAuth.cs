@@ -38,6 +38,7 @@ public static class StartupOAuth // TODO: Review if needed, after figuring out m
                     ValidateAudience = true,
                     ValidIssuer = configuration["OAuth:Authority"]
                 };
+                options.RequireHttpsMetadata = false; // TODO: Remove this after audience/authority is added to configuration
             });
     }
 

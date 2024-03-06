@@ -1,8 +1,7 @@
 ﻿using CorrelationId;
 using CorrelationId.DependencyInjection;
 using JToolkit.Capabilities;
-using JToolkit.Middleware.Filters;
-using JToolkit.Middleware.Wrappers;
+using JToolkit.Middleware;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace JToolkit;
@@ -35,7 +34,7 @@ public class Startup
         services.ConfigureValidations();
 
         services.ConfigureConfigurations(Configuration);
-        // services.ConfigureServices();
+        services.ConfigureServices();
         // services.AddRepositories();
         // services.AddDataProviders();
 
@@ -47,6 +46,7 @@ public class Startup
         services.ConfigureMvc();
         services.AddResponseCompression();
         
+        services.AddSwaggerGen();
         services.AddHealthChecks();
     }
 
@@ -63,7 +63,7 @@ public class Startup
         app.UseMiddleware<ExceptionWrapperMiddleware>();
 
         // app.UseMiddleware<QueryLogMiddleware>();
-
+        app.UseSwagger(env);
         // Must be before UseAuthorization()
         app.UseMiddleware<AuthorizationHeaderFilterMiddleware>();
 
