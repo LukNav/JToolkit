@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="CorrelationId" Version="3.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.12" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.12" />
+        <PackageReference Include="Microsoft.Extensions.Primitives" Version="8.0.0" />
+<!--        <PackageReference Include="prometheus-net.AspNetCore" Version="8.0.1" />-->
+        <PackageReference Include="System.Linq.Async" Version="6.0.1" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\JToolkit.Comparer\JToolkit.Comparer.csproj" />
+      <ProjectReference Include="..\JToolkit.Validation\JToolkit.Validation.csproj" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="Controllers\" />
+      <Folder Include="Middleware\Handlers\" />
+    </ItemGroup>
+    
+</Project>

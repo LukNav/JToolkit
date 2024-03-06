@@ -1,0 +1,11 @@
+C:\Personal\JToolkit\src\JToolkit.Contracts\bin\Debug\net8.0\JToolkit.Contracts.deps.json
+C:\Personal\JToolkit\src\JToolkit.Contracts\bin\Debug\net8.0\JToolkit.Contracts.dll
+C:\Personal\JToolkit\src\JToolkit.Contracts\bin\Debug\net8.0\JToolkit.Contracts.pdb
+C:\Personal\JToolkit\src\JToolkit.Contracts\obj\Debug\net8.0\JToolkit.Contracts.GeneratedMSBuildEditorConfig.editorconfig
+C:\Personal\JToolkit\src\JToolkit.Contracts\obj\Debug\net8.0\JToolkit.Contracts.AssemblyInfoInputs.cache
+C:\Personal\JToolkit\src\JToolkit.Contracts\obj\Debug\net8.0\JToolkit.Contracts.AssemblyInfo.cs
+C:\Personal\JToolkit\src\JToolkit.Contracts\obj\Debug\net8.0\JToolkit.Contracts.csproj.CoreCompileInputs.cache
+C:\Personal\JToolkit\src\JToolkit.Contracts\obj\Debug\net8.0\JToolkit.Contracts.dll
+C:\Personal\JToolkit\src\JToolkit.Contracts\obj\Debug\net8.0\refint\JToolkit.Contracts.dll
+C:\Personal\JToolkit\src\JToolkit.Contracts\obj\Debug\net8.0\JToolkit.Contracts.pdb
+C:\Personal\JToolkit\src\JToolkit.Contracts\obj\Debug\net8.0\ref\JToolkit.Contracts.dll

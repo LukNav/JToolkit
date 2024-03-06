@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "JToolkit.Validation/1.0.0": {
+        "dependencies": {
+          "JToolkit.Contracts": "1.0.0"
+        },
+        "runtime": {
+          "JToolkit.Validation.dll": {}
+        }
+      },
+      "JToolkit.Contracts/1.0.0": {
+        "runtime": {
+          "JToolkit.Contracts.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "JToolkit.Validation/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "JToolkit.Contracts/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

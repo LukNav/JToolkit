@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "/E/hRB/TSFSG/3rpa1ot9h8Y408W5CTnwdDi1yJi5kUZKpgzSnDGjz2YgkkEPVkH8w4qaBRdQtCERvyF4kLiHg==",
+  "success": true,
+  "projectFilePath": "C:\\Personal\\JToolkit\\src\\JToolkit.Comparer\\JToolkit.Comparer.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\l.navasinskas\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512"
+  ],
+  "logs": []
+}

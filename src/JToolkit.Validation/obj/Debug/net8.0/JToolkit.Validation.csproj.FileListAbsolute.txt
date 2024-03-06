@@ -1,0 +1,15 @@
+C:\Personal\JToolkit\src\JToolkit.Validation\bin\Debug\net8.0\JToolkit.Validation.deps.json
+C:\Personal\JToolkit\src\JToolkit.Validation\bin\Debug\net8.0\JToolkit.Validation.dll
+C:\Personal\JToolkit\src\JToolkit.Validation\bin\Debug\net8.0\JToolkit.Validation.pdb
+C:\Personal\JToolkit\src\JToolkit.Validation\bin\Debug\net8.0\JToolkit.Contracts.dll
+C:\Personal\JToolkit\src\JToolkit.Validation\bin\Debug\net8.0\JToolkit.Contracts.pdb
+C:\Personal\JToolkit\src\JToolkit.Validation\obj\Debug\net8.0\JToolkit.Validation.csproj.AssemblyReference.cache
+C:\Personal\JToolkit\src\JToolkit.Validation\obj\Debug\net8.0\JToolkit.Validation.GeneratedMSBuildEditorConfig.editorconfig
+C:\Personal\JToolkit\src\JToolkit.Validation\obj\Debug\net8.0\JToolkit.Validation.AssemblyInfoInputs.cache
+C:\Personal\JToolkit\src\JToolkit.Validation\obj\Debug\net8.0\JToolkit.Validation.AssemblyInfo.cs
+C:\Personal\JToolkit\src\JToolkit.Validation\obj\Debug\net8.0\JToolkit.Validation.csproj.CoreCompileInputs.cache
+C:\Personal\JToolkit\src\JToolkit.Validation\obj\Debug\net8.0\JToolkit.Validation.csproj.CopyComplete
+C:\Personal\JToolkit\src\JToolkit.Validation\obj\Debug\net8.0\JToolkit.Validation.dll
+C:\Personal\JToolkit\src\JToolkit.Validation\obj\Debug\net8.0\refint\JToolkit.Validation.dll
+C:\Personal\JToolkit\src\JToolkit.Validation\obj\Debug\net8.0\JToolkit.Validation.pdb
+C:\Personal\JToolkit\src\JToolkit.Validation\obj\Debug\net8.0\ref\JToolkit.Validation.dll
