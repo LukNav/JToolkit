@@ -25,5 +25,4 @@ public class JsonController : ControllerBase
         var comparisonResult = _handler.Handle(request);
         return Ok(comparisonResult);
     }
-
 }
