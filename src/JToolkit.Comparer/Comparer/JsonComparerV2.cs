@@ -7,16 +7,17 @@ public class JsonComparerV2 : IJsonComparer
 {
     public ComparisonResult Compare(ComparableObject comparableObj)
     {
-        //Order does not matter. Compare by key - poc on that first.
+        //Ordering is done on mapping layer
         //Reader reads -> Convert to custom type (Self ordering by keys) -> Deep Compare
+        // >> Create custom value type mapper
         //Deep Compare: Iterate through objects: Compare type -> compare value type
         //Compare arrays not working :)
-        
+
         var differences = CompareObjects(comparableObj.Actual, comparableObj.Expected);
-        
+
         if (differences.Count() > 0)
             return new ComparisonResult(false, differences);
-        
+
         //fallback sanity check
         if (!JToken.DeepEquals(comparableObj.Actual, comparableObj.Expected))
             return new ComparisonResult(false, null);
@@ -37,7 +38,7 @@ public class JsonComparerV2 : IJsonComparer
         {
             differences = new List<string>();
         }
-        
+
         foreach (KeyValuePair<string, JToken> sourcePair in actual)
         {
             if (sourcePair.Value.Type == JTokenType.Object)
@@ -53,10 +54,12 @@ public class JsonComparerV2 : IJsonComparer
                 CompareValue(expected, sourcePair, differences);
             }
         }
+
         return differences;
     }
 
-    private static void CompareValue(JObject expected, KeyValuePair<string, JToken> sourcePair, List<string> differences)
+    private static void CompareValue(JObject expected, KeyValuePair<string, JToken> sourcePair,
+        List<string> differences)
     {
         JToken expectedValue = sourcePair.Value;
         var actual = expected.SelectToken(sourcePair.Key);
@@ -77,7 +80,8 @@ public class JsonComparerV2 : IJsonComparer
         }
     }
 
-    private static void CompareArray(JObject Expected, KeyValuePair<string, JToken> sourcePair, List<string> differences)
+    private static void CompareArray(JObject Expected, KeyValuePair<string, JToken> sourcePair,
+        List<string> differences)
     {
         if (Expected.GetValue(sourcePair.Key) == null)
         {
@@ -91,7 +95,8 @@ public class JsonComparerV2 : IJsonComparer
         }
     }
 
-    private static void CompareObject(JObject Expected, KeyValuePair<string, JToken> sourcePair, List<string> differences)
+    private static void CompareObject(JObject Expected, KeyValuePair<string, JToken> sourcePair,
+        List<string> differences)
     {
         var expectedValue = Expected[sourcePair.Key];
         if (expectedValue == null)
@@ -99,10 +104,11 @@ public class JsonComparerV2 : IJsonComparer
             differences.Add("Key " + sourcePair.Key
                                    + " not found" + Environment.NewLine);
         }
-        else if (expectedValue.Type != JTokenType.Object) {
+        else if (expectedValue.Type != JTokenType.Object)
+        {
             differences.Add("Key " + sourcePair.Key
                                    + " is not an object in target" + Environment.NewLine);
-        }                    
+        }
         else
         {
             var actual = sourcePair.Value.ToObject<JObject>() ?? throw new InvalidOperationException();
@@ -113,51 +119,51 @@ public class JsonComparerV2 : IJsonComparer
 
 
     /// <summary>
-      /// Deep compare two NewtonSoft JArrays. If they don't match, returns text diffs
-      /// </summary>
-      /// <param name="source">The expected results</param>
-      /// <param name="target">The actual results</param>
-      /// <param name="arrayName">The name of the array to use in the text diff</param>
-      /// <returns>Text string</returns>
+    /// Deep compare two NewtonSoft JArrays. If they don't match, returns text diffs
+    /// </summary>
+    /// <param name="source">The expected results</param>
+    /// <param name="target">The actual results</param>
+    /// <param name="arrayName">The name of the array to use in the text diff</param>
+    /// <returns>Text string</returns>
 
-      private static List<string> CompareArrays(JArray source, JArray target, string arrayName)
-      {
-          List<string> differences = new List<string>();
-          
-          var actualArray = source.Where(s=>s.Type == JTokenType.String).Select(x => x.Value<string>()).ToArray();
-          var expectedArray = target.Where(s=>s.Type == JTokenType.String).Select(x => x.Value<string>()).ToArray();
-          var newValues = actualArray.Where(x => !expectedArray.Contains(x));
-          var missingValues = expectedArray.Where(x => !actualArray.Contains(x));
-          
-          if (missingValues.Any())
-          {
-              differences.Add($"Column [{arrayName}] Missing Values: {String.Join(", ", missingValues)}");
-          }
-          if (newValues.Any())
-          {
-              differences.Add($"Column [{arrayName}] New values: {String.Join(", ", newValues)}");
-          }
-          //
-          //
-          // for (int index = 0; index < source.Count(); index++)
-          // {
-          //     var expected = source[index];
-          //     if (expected.Type == JTokenType.Object)
-          //     {
-          //         var actual = (index >= target.Count()) ? new JObject() : target[index];
-          //         differences.AddRange(CompareObjects(expected.ToObject<JObject>(),
-          //             actual.ToObject<JObject>()));
-          //     }
-          //     if (expected.Type == JTokenType.Array)
-          //     {
-          //         var actual = (index >= target.Count()) ? new JObject() : target[index];
-          //         differences.AddRange(CompareArrays(actual.ToObject<JArray>(), expected.ToObject<JArray>(), $"{arrayName}[{index}]"));
-          //     }
-          // }
-          return differences;
-      }
-      
-       //
+    private static List<string> CompareArrays(JArray source, JArray target, string arrayName)
+    {
+        List<string> differences = new List<string>();
+
+        var newValues = source.Where(x => !target.Contains(x));
+        var missingValues = source.Where(x => !target.Contains(x));
+
+        if (missingValues.Any())
+        {
+            differences.Add($"Column [{arrayName}] Missing Values: {String.Join(", ", missingValues)}");
+        }
+
+        if (newValues.Any())
+        {
+            differences.Add($"Column [{arrayName}] New values: {String.Join(", ", newValues)}");
+        }
+
+        //
+        //
+        // for (int index = 0; index < source.Count(); index++)
+        // {
+        //     var expected = source[index];
+        //     if (expected.Type == JTokenType.Object)
+        //     {
+        //         var actual = (index >= target.Count()) ? new JObject() : target[index];
+        //         differences.AddRange(CompareObjects(expected.ToObject<JObject>(),
+        //             actual.ToObject<JObject>()));
+        //     }
+        //     if (expected.Type == JTokenType.Array)
+        //     {
+        //         var actual = (index >= target.Count()) ? new JObject() : target[index];
+        //         differences.AddRange(CompareArrays(actual.ToObject<JArray>(), expected.ToObject<JArray>(), $"{arrayName}[{index}]"));
+        //     }
+        // }
+        return differences;
+    }
+
+    //
     // /// <summary>
     // /// Deep compare two NewtonSoft JArrays. If they don't match, returns text diffs
     // /// </summary>
