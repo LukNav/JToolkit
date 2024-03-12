@@ -38,6 +38,7 @@ public class HappyFlowTests
         Assert.That(actualResponse.AreEquivalent, Is.EqualTo(expectedResponse.AreEquivalent));
         Assert.That(actualResponse.Differences, Is.EqualTo(expectedResponse.Differences));
     }
+    
     [Test]
     public void HappyFlow_EqualArrays()
     {

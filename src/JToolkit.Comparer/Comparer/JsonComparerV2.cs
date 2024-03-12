@@ -16,12 +16,16 @@ public class JsonComparerV2 : IJsonComparer
         var differences = CompareObjects(comparableObj.Actual, comparableObj.Expected);
 
         if (differences.Count() > 0)
+        {
             return new ComparisonResult(false, differences);
-
+        }
+        
         //fallback sanity check
-        if (!JToken.DeepEquals(comparableObj.Actual, comparableObj.Expected))
-            return new ComparisonResult(false, null);
-
+        // if (!JToken.DeepEquals(comparableObj.Actual, comparableObj.Expected)) // TODO: Fix fallback unordered values issue
+        // {
+        //     // TODO: Log inner uncaught exception
+        //     return new ComparisonResult(false, null);
+        // }
         return new ComparisonResult(true, null);
     }
 
@@ -39,13 +43,13 @@ public class JsonComparerV2 : IJsonComparer
             differences = new List<string>();
         }
 
-        foreach (KeyValuePair<string, JToken> sourcePair in actual)
+        foreach (KeyValuePair<string, JToken?> sourcePair in actual)
         {
-            if (sourcePair.Value.Type == JTokenType.Object)
+            if (sourcePair.Value?.Type == JTokenType.Object)
             {
                 CompareObject(expected, sourcePair, differences);
             }
-            else if (sourcePair.Value.Type == JTokenType.Array)
+            else if (sourcePair.Value?.Type == JTokenType.Array)
             {
                 CompareArray(expected, sourcePair, differences);
             }
@@ -65,33 +69,36 @@ public class JsonComparerV2 : IJsonComparer
         var actual = expected.SelectToken(sourcePair.Key);
         if (actual == null)
         {
-            differences.Add("Key " + sourcePair.Key
-                                   + " not found" + Environment.NewLine);
+            differences.Add($"Key [{sourcePair.Key}] not found{Environment.NewLine}");
         }
         else
         {
             if (!JToken.DeepEquals(expectedValue, actual))
             {
-                differences.Add("Key " + sourcePair.Key + ": "
-                                + sourcePair.Value + " !=  "
-                                + expected.Property(sourcePair.Key)?.Value
-                                + Environment.NewLine);
+                differences.Add($"Key [{sourcePair.Key}]: expected: {sourcePair.Value}, but was: {expected.Property(sourcePair.Key)?.Value}{Environment.NewLine}"); // TODO: Differences should be a separate type, not string
             }
         }
     }
 
-    private static void CompareArray(JObject Expected, KeyValuePair<string, JToken> sourcePair,
+    private static void CompareArray(JObject expected, KeyValuePair<string, JToken> sourcePair,
         List<string> differences)
     {
-        if (Expected.GetValue(sourcePair.Key) == null)
+        var expectedValue = expected.GetValue(sourcePair.Key);
+        if (expectedValue == null)
         {
-            differences.Add("Key " + sourcePair.Key
-                                   + " not found" + Environment.NewLine);
+            differences.Add($"Key {sourcePair.Key} not found{Environment.NewLine}"); // TODO: Cover scenario in tests. Potential issue when comparing null with array? Might be solved with naming
+        }
+        else if(expectedValue.Type != JTokenType.Array)
+        {
+            // TODO: Environment.NewLine shouldn't be here. Move to some aggregator
+            differences.Add($"Key {sourcePair.Key} of type {JTokenType.Array} is not the same type in target of type {expectedValue.Type}{Environment.NewLine}"); // TODO: Cover scenario in tests. Might be an issue when the type is null?
         }
         else
         {
-            differences.AddRange(CompareArrays(sourcePair.Value.ToObject<JArray>(),
-                Expected.GetValue(sourcePair.Key).ToObject<JArray>(), sourcePair.Key));
+            var source = sourcePair.Value.ToObject<JArray>()!; // TODO: Solve nullability suppresor (potentially it is fine, since type is checked to be Array)
+            var target = expectedValue.ToObject<JArray>()!;
+            var comparisonResult = CompareArrays(source, target, sourcePair.Key);
+            differences.AddRange(comparisonResult);
         }
     }
 
@@ -130,8 +137,13 @@ public class JsonComparerV2 : IJsonComparer
     {
         List<string> differences = new List<string>();
 
-        var newValues = source.Where(x => !target.Contains(x));
-        var missingValues = source.Where(x => !target.Contains(x));
+        // TODO: Check if type is object type
+        
+        // ELSE - convert values to strings, compare strings
+        var actualArray = source.Select(x => x.Value<string>()).ToArray();
+        var expectedArray = target.Select(x => x.Value<string>()).ToArray();
+        var newValues = actualArray.Where(x => !expectedArray.Contains(x));
+        var missingValues = expectedArray.Where(x => !actualArray.Contains(x));
 
         if (missingValues.Any())
         {
