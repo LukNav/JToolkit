@@ -20,10 +20,9 @@ public class JsonController : ControllerBase
     [ActionName("compare")]
     [HttpPost]
     [Authorize(AuthorizationPolicies.ScopePolicy)]
-    public IActionResult Compare([FromBody] ComparisonRequest request)
+    public IActionResult ComparePost([FromBody] ComparisonRequest request)
     {
         var comparisonResult = _handler.Handle(request);
         return Ok(comparisonResult);
     }
-
 }
