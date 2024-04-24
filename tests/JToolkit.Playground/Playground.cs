@@ -1,5 +1,7 @@
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.RegularExpressions;
 using System.Threading.Channels;
 using ExcelDataReader;
 using JToolkit.Playground.JsonTools;
@@ -97,7 +99,7 @@ public class JsonToolkit
         Console.WriteLine("Count: "+ arr.Length);
     }
 
-[Test]
+    [Test]
     public void IsLeftSupersetOfRight()
     {
         string[] a = {"c:inventory_stats_ssp","c:inventory_stats_cd","c:inventory_stats_adx","c:inventory_stats_ppas","c:inventory_stats_ssp_requests","c:inventory_stats_deal_requests","c:inventory_stats_deal","c:inventory_stats_lap","c:inventory_stats_package_requests","c:inventory_stats_package","c:inventory_stats_creative_requests","c:inventory_stats_creative","c:page_key_value_stats_adx"};
@@ -107,7 +109,7 @@ public class JsonToolkit
         Assert.True(IsLeftSetSupersetOfRight(ab,aa)); // Does actual have the same values as expected
     }
         
-        private static bool IsLeftSetSupersetOfRight(string[][]? leftColorSets, string[][]? rightColorSets)
+    private static bool IsLeftSetSupersetOfRight(string[][]? leftColorSets, string[][]? rightColorSets)
     {
         return leftColorSets is not null && rightColorSets is not null 
                                          && leftColorSets.All(leftColorSet =>
@@ -115,5 +117,22 @@ public class JsonToolkit
                                                  rightColorSet.OrderBy(v => v)
                                                      .SequenceEqual(
                                                          leftColorSet.OrderBy(v=>v))));
+    }
+
+    [TestCase(1.01)]
+    [TestCase(1.011)]
+    [TestCase(1.0)]
+    [TestCase(1)]
+    [TestCase(-1)]
+    [TestCase(-1.011)]
+    [TestCase(-1.01)]
+    public void DecimalTwoPointPrecisionLimit(decimal d)
+    {
+        int precision = 2;
+        var onlyGivenDecimalPlacesAfterDotRegexPattern = $@"^-?\d+(.\d{{1,{precision}}})?$";
+
+        Assert.True(Regex.Match(d.ToString(CultureInfo.InvariantCulture), onlyGivenDecimalPlacesAfterDotRegexPattern)
+            .Success);
+        
     }
 }
