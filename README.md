@@ -8,6 +8,7 @@ Todo's:
 * Logic optimization
 * Analysis response format realignment
 * UI
+* HTTP interface for filling JSON from HTTP response bodies
 * Cache
 * Chatbot
 * Logic abstraction for various use cases: Logic usage via CLI/API
