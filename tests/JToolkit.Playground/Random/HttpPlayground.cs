@@ -3,6 +3,7 @@ using HttpClient = JToolkit.Playground.Random.HttpTools.HttpClient;
 
 namespace JToolkit.Playground.Random;
 
+[Explicit]
 public class HttpPlayground
 {
     [Test]

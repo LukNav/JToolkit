@@ -9,6 +9,7 @@ using NUnit.Framework;
 
 namespace JToolkit.Playground;
 
+[Explicit]
 public class JsonToolkit
 {
     [Test]
