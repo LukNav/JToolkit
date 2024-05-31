@@ -163,13 +163,9 @@ public class JsonComparer : IJsonComparer
     {
         List<Difference> differences = new List<Difference>();
 
-        // TODO: Check if type is object type
-        
-        
-        // ELSE - convert values to strings, compare strings
         var actualArray = actual.Select(x => x.Value<JToken>()).ToArray();
         var expectedArray = expected.Select(x => x.Value<JToken>()).ToArray();
-        var newValues = actualArray.Where(x => !expectedArray.Contains(x));
+        var newValues = actualArray.Where(x => !expectedArray.Contains(x)); // TODO: Test string array, but in actual one string is object with key/value same as string name
         var missingValues = expectedArray.Where(x => !actualArray.Contains(x));
 
         if (missingValues.Any())
@@ -191,6 +187,9 @@ public class JsonComparer : IJsonComparer
                 Actual = newValues
             });
         }
+
+        // ELSE - convert values to strings, compare strings
+
 
         //
         //
