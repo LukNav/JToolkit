@@ -1,8 +1,16 @@
 namespace JToolkit.Comparer.Models;
 
-public class Difference
+public record Difference
 {
     public string Key { get; set; }
-    public string Expected { get; set; }
-    public string Actual { get; set; }
+    public DifferenceReason Reason { get; set; }
+    public object Expected { get; set; }
+    public object Actual { get; set; }
+}
+public enum DifferenceReason
+{
+    TypesMismatch,
+    ValuesMismatch,
+    MissingValues,
+    ExtraValues
 }

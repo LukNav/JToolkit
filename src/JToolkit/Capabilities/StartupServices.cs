@@ -9,7 +9,7 @@ public static class StartupConfiguration
     public static IServiceCollection ConfigureServices(this IServiceCollection services)
     {
         services.AddSingleton<IComparisonHandler, ComparisonHandler>();
-        services.AddSingleton<IJsonComparer, JsonComparerV2>();
+        services.AddSingleton<IJsonComparer, JsonComparer>();
         services.AddSingleton<IComparisonMapper, ComparisonMapper>();
         return services;
     }

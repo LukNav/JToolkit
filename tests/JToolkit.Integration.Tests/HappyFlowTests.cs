@@ -14,7 +14,7 @@ public class HappyFlowTests
     public void Setup()
     {
         IComparisonMapper comparisonMapper = new ComparisonMapper();
-        IJsonComparer jsonComparer = new JsonComparerV2();
+        IJsonComparer jsonComparer = new JsonComparer();
         _comparisonHandler = new ComparisonHandler(comparisonMapper, jsonComparer);
     }
 

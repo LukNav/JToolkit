@@ -14,7 +14,7 @@ public class ComparisonTests
     public void Setup()
     {
         IComparisonMapper comparisonMapper = new ComparisonMapper();
-        IJsonComparer jsonComparer = new JsonComparerV2();
+        IJsonComparer jsonComparer = new JsonComparer();
         _comparisonHandler = new ComparisonHandler(comparisonMapper, jsonComparer);
     }
 
@@ -102,7 +102,7 @@ public class ComparisonTests
               {
                 "metrics": ["TestVal1", "TestVal2", null]
               }
-              """, TestName="DifferencesReturned_WhenArraysContainAlLValuesAndNull")]
+              """, TestName="DifferencesReturned_WhenArraysContainAllValuesAndNull")]
     [TestCase("""
               {
                 "metrics": null
