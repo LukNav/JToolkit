@@ -162,7 +162,6 @@ public class ComparisonTests
         Assert.That(actualResponse.AreEquivalent, Is.True);
         Assert.That(actualResponse.Differences, Is.Null);
     }
-    
       
     [TestCase("""
               {
@@ -196,5 +195,32 @@ public class ComparisonTests
         Assert.That(actualResponse.Differences, Is.Not.Empty);
 
         Console.WriteLine($"Response:{Environment.NewLine}{JsonConvert.SerializeObject(actualResponse)}"); 
+    }
+    
+      
+    [TestCase("""
+              {
+                "Employees": [ { "firstName":"John" }]
+              }
+              """, TestName="NoDifferencesReturned_WhenObjectValuesAreEquivalent")]
+    public void ObjectArraysReturnsNoDifferences(string actualValue)
+    {
+        string expected = """
+                          {
+                            "Employees": [ { "firstName":"John" }]
+                          }
+                          """;
+        
+        string actual = actualValue;
+        
+        var request = new ComparisonRequest
+        {
+            Actual = actual, Expected = expected
+        };
+
+        var actualResponse = _comparisonHandler.Handle(request);
+        
+        Assert.That(actualResponse.AreEquivalent, Is.True);
+        Assert.That(actualResponse.Differences, Is.Null.Or.Empty);
     }
 }

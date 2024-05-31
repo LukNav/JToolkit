@@ -106,9 +106,9 @@ public class JsonComparer : IJsonComparer
         }
         else
         {
-            var source = sourcePair.Value.ToObject<JArray>()!; // TODO: Solve nullability suppresor (potentially it is fine, since type is checked to be Array)
-            var target = expectedValue.ToObject<JArray>()!;
-            var comparisonResult = CompareArrays(source, target, sourcePair.Key);
+            var actualVal = sourcePair.Value.ToObject<JArray>()!; // TODO: Solve nullability suppresor (potentially it is fine, since type is checked to be Array)
+            var expectedVal = expectedValue.ToObject<JArray>()!;
+            var comparisonResult = CompareArrays(actualVal, expectedVal, sourcePair.Key);
             differences.AddRange(comparisonResult);
         }
     }
@@ -154,12 +154,12 @@ public class JsonComparer : IJsonComparer
     /// <summary>
     /// Deep compare two NewtonSoft JArrays. If they don't match, returns text diffs
     /// </summary>
-    /// <param name="source">The expected results</param>
-    /// <param name="target">The actual results</param>
+    /// <param name="actual">The actual results</param>
+    /// <param name="expected">The expected results</param>
     /// <param name="arrayName">The name of the array to use in the text diff</param>
     /// <returns>Text string</returns>
 
-    private static List<Difference> CompareArrays(JArray source, JArray target, string arrayName)
+    private static List<Difference> CompareArrays(JArray actual, JArray expected, string arrayName)
     {
         List<Difference> differences = new List<Difference>();
 
@@ -167,8 +167,8 @@ public class JsonComparer : IJsonComparer
         
         
         // ELSE - convert values to strings, compare strings
-        var actualArray = source.Select(x => x.Value<JToken>()).ToArray();
-        var expectedArray = target.Select(x => x.Value<JToken>()).ToArray();
+        var actualArray = actual.Select(x => x.Value<JToken>()).ToArray();
+        var expectedArray = expected.Select(x => x.Value<JToken>()).ToArray();
         var newValues = actualArray.Where(x => !expectedArray.Contains(x));
         var missingValues = expectedArray.Where(x => !actualArray.Contains(x));
 
