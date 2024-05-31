@@ -2,14 +2,11 @@
 
 namespace JToolkit.Middleware
 {
-    public class AuthorizationHeaderFilterMiddleware
+    public class AuthorizationHeaderFilterMiddleware(RequestDelegate next)
     {
-        private const 
-            string AuthorizationHeaderKey = "Authorization";
-        private readonly RequestDelegate _next;
+        private const string AuthorizationHeaderKey = "Authorization";
+        private readonly RequestDelegate _next = next ?? throw new ArgumentNullException(nameof (next));
         private const char Separator = ',';
-
-        public AuthorizationHeaderFilterMiddleware(RequestDelegate next) => this._next = next ?? throw new ArgumentNullException(nameof (next)); // TODO: Convert to primary constructor
 
         public async Task InvokeAsync(HttpContext httpContext)
         {

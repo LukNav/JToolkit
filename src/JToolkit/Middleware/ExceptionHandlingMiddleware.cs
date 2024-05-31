@@ -1,10 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
-using System.Text.Json;
 using JToolkit.Middleware.Extensions;
 using JToolkit.Middleware.Models;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 
-namespace JToolkit.Middleware
+namespace JToolkit.Middleware // TODO: Separate exception handlers from wrapper.
 {
   /// <summary>Handles all exceptions within the application</summary>
   public class ExceptionHandlingMiddleware
@@ -33,7 +33,7 @@ namespace JToolkit.Middleware
         httpContext.Response.StatusCode = GetStatusCode(ex);
         httpContext.Response.ContentType = "application/json";
         httpContext.Items.Add("exception", ex);
-        await httpContext.Response.WriteAsync(JsonSerializer.Serialize(error));
+        await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(error));
       }
     }
 

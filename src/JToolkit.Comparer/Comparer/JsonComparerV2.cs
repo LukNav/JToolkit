@@ -139,9 +139,10 @@ public class JsonComparerV2 : IJsonComparer
 
         // TODO: Check if type is object type
         
+        
         // ELSE - convert values to strings, compare strings
-        var actualArray = source.Select(x => x.Value<string>()).ToArray();
-        var expectedArray = target.Select(x => x.Value<string>()).ToArray();
+        var actualArray = source.Select(x => x.Value<JToken>()).ToArray();
+        var expectedArray = target.Select(x => x.Value<JToken>()).ToArray();
         var newValues = actualArray.Where(x => !expectedArray.Contains(x));
         var missingValues = expectedArray.Where(x => !actualArray.Contains(x));
 

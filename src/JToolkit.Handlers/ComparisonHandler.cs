@@ -4,21 +4,12 @@ using JToolkit.Comparer.Models;
 
 namespace JToolkit.Handlers;
 
-public class ComparisonHandler : IComparisonHandler
+public class ComparisonHandler(IComparisonMapper comparisonMapper, IJsonComparer jsonComparer) : IComparisonHandler
 {
-    private IComparisonMapper _comparisonMapper;
-    private IJsonComparer _jsonComparer;
-
-    public ComparisonHandler(IComparisonMapper comparisonMapper, IJsonComparer jsonComparer)
-    {
-        _comparisonMapper = comparisonMapper;
-        _jsonComparer = jsonComparer;
-    }
-
     public ComparisonResult Handle(ComparisonRequest request)
     {
-        // TODO: validate in base or here
-        var jsonComparison = _comparisonMapper.Map(request);
-        return _jsonComparer.Compare(jsonComparison);
+        // TODO: validate in base or here ?? Validation should be done before the request comes to handler? Injected middleware
+        var jsonComparison = comparisonMapper.Map(request);
+        return jsonComparer.Compare(jsonComparison);
     }
 }

@@ -6,15 +6,9 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace JToolkit;
 
-public class Startup
+public class Startup(IConfiguration configuration)
 {
-    private IConfiguration Configuration { get; }
-
-
-    public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration)); // TODO: Primary constructor? (Use resharper suggestion)
-    }
+    private IConfiguration Configuration { get; } = configuration ?? throw new ArgumentNullException(nameof(configuration));
 
     public void ConfigureServices(IServiceCollection services)
     {

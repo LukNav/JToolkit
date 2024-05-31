@@ -27,7 +27,7 @@ public static class StartupMvc
 
             options.SerializerSettings.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy()));
             options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-
+            options.SerializerSettings.StringEscapeHandling = StringEscapeHandling.EscapeNonAscii;
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,

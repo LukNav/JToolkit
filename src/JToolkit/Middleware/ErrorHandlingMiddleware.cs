@@ -1,8 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
-using System.Text.Json;
 using JToolkit.Middleware.Extensions;
 using JToolkit.Middleware.Models;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 
 namespace JToolkit.Middleware
 {
@@ -46,7 +46,7 @@ namespace JToolkit.Middleware
         }
       }
       httpContext.Response.Headers.Add("WWW-Authenticate", stringValues);
-      await httpContext.Response.WriteAsync(JsonSerializer.Serialize(responseFromCode));
+      await httpContext.Response.WriteAsync(JsonConvert.SerializeObject(responseFromCode));
     }
 
     private static StringValues BuildErrorResponse(string realm, string error, string errorDescription)

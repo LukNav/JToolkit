@@ -1,9 +1,8 @@
-using System.Text.Json;
 using JToolkit.Comparer.Comparer;
 using JToolkit.Comparer.Mappers;
 using JToolkit.Comparer.Models;
-using JToolkit.Controllers;
 using JToolkit.Handlers;
+using Newtonsoft.Json;
 
 namespace JToolkit.Integration.Tests;
 
@@ -34,7 +33,7 @@ public class ComparisonTests
                 "metric": null
               }
               """, TestName="DifferencesReturned_WhenActualValueIsNull")]
-    public void DifferentValueTests(string actualValue)
+    public void ValuesReturnsDifferences(string actualValue)
     {
         string expected = """
                           {
@@ -54,7 +53,7 @@ public class ComparisonTests
         Assert.That(actualResponse.AreEquivalent, Is.False);
         Assert.That(actualResponse.Differences, Is.Not.Empty);
 
-        Console.WriteLine($"Response:{Environment.NewLine}{JsonSerializer.Serialize(actualResponse)}"); 
+        Console.WriteLine($"Response:{Environment.NewLine}{JsonConvert.SerializeObject(actualResponse)}"); 
     }
 
     [Test]
@@ -76,9 +75,8 @@ public class ComparisonTests
         Assert.That(actualResponse.AreEquivalent, Is.True);
         Assert.That(actualResponse.Differences, Is.Null);
 
-        Console.WriteLine($"Response:{Environment.NewLine}{JsonSerializer.Serialize(actualResponse)}"); 
+        Console.WriteLine($"Response:{Environment.NewLine}{JsonConvert.SerializeObject(actualResponse)}"); 
     }
-    
     
     [TestCase("""
               {
@@ -115,7 +113,7 @@ public class ComparisonTests
                 "metrics": [null,null]
               }
               """, TestName="DifferencesReturned_WhenAllValuesAreNull")]
-    public void DifferentArrayValueTests(string actualValue)
+    public void ArrayValuesReturnsDifferences(string actualValue)
     {
         string expected = """
                           {
@@ -136,7 +134,7 @@ public class ComparisonTests
         Assert.That(actualResponse.Differences, Is.Not.Null);
         Assert.That(actualResponse.Differences, Is.Not.Empty);
 
-        Console.WriteLine($"Response:{Environment.NewLine}{JsonSerializer.Serialize(actualResponse)}"); 
+        Console.WriteLine($"Response:{Environment.NewLine}{JsonConvert.SerializeObject(actualResponse)}"); 
     }
     
     [TestCase("""
@@ -144,7 +142,7 @@ public class ComparisonTests
                 "metrics": ["TestVal2", "TestVal1"]
               }
               """, TestName="NoDifferencesReturned_WhenAllValuesAreSameButDifferentOrder")]
-    public void ArrayValueTests(string actualValue)
+    public void ArrayValuesReturnsNoDifferences(string actualValue)
     {
         string expected = """
                           {
@@ -163,5 +161,40 @@ public class ComparisonTests
         
         Assert.That(actualResponse.AreEquivalent, Is.True);
         Assert.That(actualResponse.Differences, Is.Null);
+    }
+    
+      
+    [TestCase("""
+              {
+                "Employees": [ { "firstName":"Johnny" }]
+              }
+              """, TestName="DifferencesReturned_WhenObjectValuesAreDifferent")]
+    [TestCase("""
+              {
+                "Employees": [ { "firstName":"John" }, { "firstName":"Bob" }]
+              }
+              """, TestName="DifferencesReturned_WhenActualHasMoreValues")]
+    public void ObjectArraysReturnsDifferences(string actualValue)
+    {
+        string expected = """
+                          {
+                            "Employees": [ { "firstName":"John" }]
+                          }
+                          """;
+        
+        string actual = actualValue;
+        
+        var request = new ComparisonRequest
+        {
+            Actual = actual, Expected = expected
+        };
+
+        var actualResponse = _comparisonHandler.Handle(request);
+        
+        Assert.That(actualResponse.AreEquivalent, Is.False);
+        Assert.That(actualResponse.Differences, Is.Not.Null);
+        Assert.That(actualResponse.Differences, Is.Not.Empty);
+
+        Console.WriteLine($"Response:{Environment.NewLine}{JsonConvert.SerializeObject(actualResponse)}"); 
     }
 }
