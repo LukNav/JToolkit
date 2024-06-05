@@ -5,13 +5,23 @@ namespace JToolkit.Playground.Random.HttpTools;
 public class HttpClient
 {
     private readonly System.Net.Http.HttpClient _client;
-    private readonly string _bearerToken;
 
-    public HttpClient(string bearerToken)
+    public HttpClient()
     {
         _client = new System.Net.Http.HttpClient();
-        _bearerToken = bearerToken;
-        _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _bearerToken);
+    }
+    
+    public HttpClient WithBearerToken(string bearerToken)
+    {
+        _client.DefaultRequestHeaders.Authorization = 
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", bearerToken);
+        return this;
+    }
+    
+    public HttpClient WithAuthTicket(string authTicket)
+    {
+        _client.DefaultRequestHeaders.Add("authTicket", authTicket);
+        return this;
     }
 
     public async Task<string> GetAsync(string url)
