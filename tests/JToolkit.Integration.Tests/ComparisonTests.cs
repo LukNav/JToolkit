@@ -139,9 +139,14 @@ public class ComparisonTests
     
     [TestCase("""
               {
-                "metrics": ["TestVal2", "TestVal1"]
+                "metrics": ["TestVal1", "TestVal2"]
               }
-              """, TestName="NoDifferencesReturned_WhenAllValuesAreSameButDifferentOrder")]
+              """, TestName="NoDifferencesReturned_WhenAllValuesAreSame")]
+    [TestCase("""
+        {
+          "metrics": ["TestVal2", "TestVal1"]
+        }
+        """, TestName="NoDifferencesReturned_WhenAllValuesAreSameButDifferentOrder")]
     public void ArrayValuesReturnsNoDifferences(string actualValue)
     {
         string expected = """
