@@ -47,7 +47,27 @@ public class JsonComparer : IJsonComparer
         {
             if (actualKeyVal.Value?.Type == JTokenType.Object)
             {
-                CompareObject(expected, actualKeyVal, differences);
+                var expectedValue = expected[actualKeyVal.Key];
+                if (expectedValue == null)
+                {
+                    differences.Add(CreateNotFoundDifference(actualKeyVal));
+                }
+                else if (expectedValue.Type != JTokenType.Object)
+                {
+                    differences.Add(new Difference
+                    {
+                        Key = actualKeyVal.Key,
+                        Reason = DifferenceReason.TypesMismatch,
+                        Expected = expectedValue,
+                        Actual = actualKeyVal.Value
+                    });
+                }
+                else // If both are objects, compare again
+                {
+                    var actualObj = actualKeyVal.Value.ToObject<JObject>() ?? throw new InvalidOperationException();
+                    var expectedObj = expectedValue.ToObject<JObject>() ?? throw new InvalidOperationException();
+                    CompareObjects(actualObj, expectedObj, differences);
+                }
             }
             else if (actualKeyVal.Value?.Type == JTokenType.Array)
             {
@@ -113,32 +133,6 @@ public class JsonComparer : IJsonComparer
         }
     }
 
-    private static void CompareObject(JObject Expected, KeyValuePair<string, JToken> sourcePair,
-        List<Difference> differences)
-    {
-        var expectedValue = Expected[sourcePair.Key];
-        if (expectedValue == null)
-        {
-            differences.Add(CreateNotFoundDifference(sourcePair));
-        }
-        else if (expectedValue.Type != JTokenType.Object)
-        {
-            differences.Add(new Difference
-            {
-                Key = sourcePair.Key,
-                Reason = DifferenceReason.TypesMismatch,
-                Expected = expectedValue,
-                Actual = sourcePair.Value
-            });
-        }
-        else
-        {
-            var actual = sourcePair.Value.ToObject<JObject>() ?? throw new InvalidOperationException();
-            var expected = expectedValue.ToObject<JObject>() ?? throw new InvalidOperationException();
-            differences.AddRange(CompareObjects(actual, expected, differences));
-        }
-    }
-
     private static Difference CreateNotFoundDifference(KeyValuePair<string, JToken> sourcePair)
     {
         return new Difference
@@ -162,52 +156,65 @@ public class JsonComparer : IJsonComparer
     private static List<Difference> CompareArrays(JArray actual, JArray expected, string arrayName)
     {
         List<Difference> differences = new List<Difference>();
-
-        var actualArray = actual.Select(x => x.Value<JToken>()).ToArray();
-        var expectedArray = expected.Select(x => x.Value<JToken>()).ToArray();
-        var newValues = actualArray.Where(x => !expectedArray.Contains(x)); // TODO: Test string array, but in actual one string is object with key/value same as string name
-        var missingValues = expectedArray.Where(x => !actualArray.Contains(x));
-
-        if (missingValues.Any())
+        
+        for (int i = 0; i < actual.Count; i++)
         {
-            differences.Add(new Difference
+            var actualItem = actual[i];
+            bool isFound = false;
+            for (int j = 0; j < expected.Count; j++)
             {
-                Key = arrayName,
-                Reason = DifferenceReason.MissingValues,
-                Expected = missingValues
-            });
-        }
+                var expectedItem = expected[j];
+                if (actualItem.Type == expectedItem.Type)
+                {
+                    if (actualItem.Type == JTokenType.Object)
+                    {
+                        var actualObj = actualItem.ToObject<JObject>() ?? throw new InvalidOperationException();
+                        var expectedObj = expectedItem.ToObject<JObject>() ?? throw new InvalidOperationException();
 
-        if (newValues.Any())
-        {
-            differences.Add(new Difference
+                        var comparisonResult = CompareObjects(actualObj, expectedObj);
+                        if (comparisonResult.Count == 0)
+                        {
+                            isFound = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (!isFound)
             {
-                Key = arrayName,
-                Reason = DifferenceReason.ExtraValues,
-                Actual = newValues
-            });
+                differences.Add(new Difference()
+                {
+                    Actual = actualItem,
+                    Key = arrayName,
+                    Reason = DifferenceReason.MissingValues
+                });
+            }
+                
         }
-
-        // ELSE - convert values to strings, compare strings
-
-
+        
+        // var newValues = actual.Where(x => !expected.Contains(x)); // TODO: Test string array, but in actual one string is object with key/value same as string name
+        // var missingValues = expected.Where(x => !actual.Contains(x));
         //
-        //
-        // for (int index = 0; index < source.Count(); index++)
+        // if (missingValues.Any())
         // {
-        //     var expected = source[index];
-        //     if (expected.Type == JTokenType.Object)
+        //     differences.Add(new Difference
         //     {
-        //         var actual = (index >= target.Count()) ? new JObject() : target[index];
-        //         differences.AddRange(CompareObjects(expected.ToObject<JObject>(),
-        //             actual.ToObject<JObject>()));
-        //     }
-        //     if (expected.Type == JTokenType.Array)
-        //     {
-        //         var actual = (index >= target.Count()) ? new JObject() : target[index];
-        //         differences.AddRange(CompareArrays(actual.ToObject<JArray>(), expected.ToObject<JArray>(), $"{arrayName}[{index}]"));
-        //     }
+        //         Key = arrayName,
+        //         Reason = DifferenceReason.MissingValues,
+        //         Expected = missingValues
+        //     });
         // }
+        //
+        // if (newValues.Any())
+        // {
+        //     differences.Add(new Difference
+        //     {
+        //         Key = arrayName,
+        //         Reason = DifferenceReason.ExtraValues,
+        //         Actual = newValues
+        //     });
+        // }
+        
         return differences;
     }
 
