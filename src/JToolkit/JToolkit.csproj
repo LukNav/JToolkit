@@ -26,6 +26,7 @@
     <ItemGroup>
       <ProjectReference Include="..\JToolkit.Comparer\JToolkit.Comparer.csproj" />
       <ProjectReference Include="..\JToolkit.Handlers\JToolkit.Handlers.csproj" />
+      <ProjectReference Include="..\JToolkit.Http\JToolkit.Http.csproj" />
       <ProjectReference Include="..\JToolkit.Validation\JToolkit.Validation.csproj" />
     </ItemGroup>
     
