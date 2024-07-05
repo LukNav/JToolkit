@@ -4,7 +4,7 @@
 public class RequestValidationException : Exception
 {
     public string Reason { get; }
-    public string MessageText { get; }
+    public string MessageText { get; } // TODO: Rename to Message, override it.
     public IDictionary<string, object>? Parameters { get; }
 
     public RequestValidationException(

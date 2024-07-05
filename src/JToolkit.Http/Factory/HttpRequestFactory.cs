@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using JToolkit.Http.Exceptions;
 using JToolkit.Http.Extensions;
@@ -9,17 +8,26 @@ namespace JToolkit.Http.Factory;
 public class HttpRequestFactory
 {
     private readonly HttpRequest _request;
+    private readonly HttpRequestFields? _commonRequestFields;
     private readonly HttpClient _client;
     
-    public HttpRequestFactory(HttpRequest request)
+    public HttpRequestFactory(HttpRequest request, HttpRequestFields? commonRequestFields)
     {
         _request = request;
-        _client = new HttpClient().WithHeaders(request.Headers);
+        _commonRequestFields = commonRequestFields;
+        _client = new HttpClient()
+            .WithHeaders(request.Headers)
+            .WithHeaders(commonRequestFields?.Headers);
     }
 
     public async Task<HttpResponseMessage> SendRequest() // TODO: Pass cancellation tokens
     {
-        switch (_request.Method)
+        RequestType requestType = 
+            _request.Method ?? 
+            _commonRequestFields?.Method ?? 
+            throw new RequestTypeRequiredException("Request type is required. It can be passed in the request or common request fields.");
+        
+        switch (requestType)
         {
             case RequestType.Get:
                 return GetAsync().Result;
@@ -44,7 +52,8 @@ public class HttpRequestFactory
 
     public async Task<HttpResponseMessage> PostAsync()
     {
-        var content = new StringContent(_request.Body?.ToString() ?? "", Encoding.UTF8, "application/json");
+        var body = _request.Body?.ToString() ?? _commonRequestFields?.Body?.ToString() ?? "";
+        var content = new StringContent(body, Encoding.UTF8, "application/json");
         
         var response = await _client
             .PostAsync(_request.Url, content);
@@ -65,7 +74,8 @@ public class HttpRequestFactory
 
     public async Task<HttpResponseMessage> PutAsync()
     {
-        var content = new StringContent(_request.Body?.ToString() ?? "", Encoding.UTF8, "application/json");
+        var body = _request.Body?.ToString() ?? _commonRequestFields?.Body?.ToString() ?? "";
+        var content = new StringContent(body, Encoding.UTF8, "application/json");
 
         var response = await _client
             .PutAsync(_request.Url, content);

@@ -1,4 +1,5 @@
 using JToolkit.Comparer.Exceptions;
+using JToolkit.Http.Exceptions;
 using JToolkit.Middleware.Exceptions;
 using JToolkit.Validation.Exceptions;
 
@@ -25,6 +26,16 @@ public class ExceptionWrapperMiddleware
                 reason: ex.Reason, parameters: ex.Parameters);
         }
         catch (InvalidJsonComparisonRequestException ex)
+        {
+            throw new BadRequestException(innerException: ex, message: ex.Message,
+                reason: ex.Reason, parameters: ex.Parameters);
+        }
+        catch (UnsupportedRequestTypeException ex)
+        {
+            throw new BadRequestException(innerException: ex, message: ex.Message,
+                reason: ex.Reason, parameters: ex.Parameters);
+        }
+        catch (RequestTypeRequiredException ex)
         {
             throw new BadRequestException(innerException: ex, message: ex.Message,
                 reason: ex.Reason, parameters: ex.Parameters);

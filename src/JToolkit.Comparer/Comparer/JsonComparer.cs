@@ -7,7 +7,7 @@ public class JsonComparer : IJsonComparer
 {
     public ComparisonResult Compare(ComparableObject request)
     {
-        JsonDifferentiator differ = new JsonDifferentiator(OutputMode.Symbol, false);
+        JsonDifferentiator differ = new JsonDifferentiator(OutputMode.Detailed, false);
         var result = differ.Differentiate(request.Expected, request.Actual);
         return new ComparisonResult(result);
     }

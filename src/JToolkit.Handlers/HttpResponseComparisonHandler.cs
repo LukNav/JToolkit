@@ -10,8 +10,8 @@ public class HttpResponseComparisonHandler(IHttpResponseComparisonMapper mapper,
 {
     public ComparisonResult Handle(HttpResponseComparisonRequest request)
     {
-        var actualResponse = new HttpRequestFactory(request.Actual).SendRequest();
-        var expectedResponse = new HttpRequestFactory(request.Expected).SendRequest();
+        var actualResponse = new HttpRequestFactory(request.ActualRequest, request.CommonRequestFields).SendRequest();
+        var expectedResponse = new HttpRequestFactory(request.ExpectedRequest, request.CommonRequestFields).SendRequest();
         var jsonComparison = mapper.Map(actualResponse, expectedResponse);
         return jsonComparer.Compare(jsonComparison);
     }
