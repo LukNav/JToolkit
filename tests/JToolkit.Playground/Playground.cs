@@ -83,7 +83,6 @@ public class JsonToolkit
             {
                 do
                 {
-                    int rowId = 0;
                     while (reader.Read())
                     {
                         List<string> fieldValues = new();
