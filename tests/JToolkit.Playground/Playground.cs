@@ -1,8 +1,8 @@
 using System.Globalization;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using System.Threading.Channels;
 using ExcelDataReader;
 using JToolkit.Playground.JsonTools;
 using NUnit.Framework;
@@ -61,15 +61,18 @@ public class JsonToolkit
     }
     
     [Test]
-    public void MapExcelColumnoJsonArrayOutput() // WIP. something wrong with nuget formatting. doesnt like encoding, yet it says thaT it supports it
+    public void ReadExcelColumnsToJsonArray() // WIP. something wrong with nuget formatting. doesnt like encoding, yet it says thaT it supports it
     {
-        string filePath= "C:\\Users\\l.navasinskas\\OneDrive - Adform\\Documents\\Campaign list.xlsx";
+        Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-        var excelData = ExcelFileInput(filePath).ToArray();
-        Console.WriteLine(excelData);
+        string filePath= "C:\\Users\\l.navasinskas\\Downloads\\deals_202410081042.xlsx";
+
+        var excelRows = ExcelFileInput(filePath).ToArray();
+        
+        Console.WriteLine(JsonSerializer.Serialize(excelRows));
     }
 
-    private static IEnumerable<string> ExcelFileInput(string filePath)
+    private static IEnumerable<IEnumerable<string>> ExcelFileInput(string filePath)
     {
         using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
         {
@@ -78,15 +81,22 @@ public class JsonToolkit
             //  - OpenXml Excel files (2007 format; *.xlsx, *.xlsb)
             using (var reader = ExcelReaderFactory.CreateReader(stream))
             {
-                // Choose one of either 1 or 2:
-
-                // 1. Use the reader methods
                 do
                 {
+                    int rowId = 0;
                     while (reader.Read())
                     {
-                        yield return reader.GetString(0);
+                        List<string> fieldValues = new();
+                        int columnsCount = reader.FieldCount;
+                        for (int column = 0; column < columnsCount; column++)
+                        {
+                            var value = reader.GetValue(column);
+                            fieldValues.Add(value?.ToString() ?? string.Empty);
+                        }
+                        
+                        yield return fieldValues;
                     }
+
                 } while (reader.NextResult());
             }
         }
